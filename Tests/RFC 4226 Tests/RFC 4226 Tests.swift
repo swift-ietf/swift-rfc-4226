@@ -1,6 +1,5 @@
-import Testing
-
 import RFC_4226
+import Testing
 
 @Suite
 struct `RFC 4226 Tests` {
