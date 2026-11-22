@@ -1,4 +1,4 @@
-extension RFC_4226 {
+extension IETF.RFC.`4226` {
 
     /// Why a HOTP generator cannot be made.
     public enum Error: Swift.Error, Sendable, Equatable {

@@ -8,7 +8,7 @@ struct `RFC 4226 Tests` {
 
     @Test
     func `Appendix D intermediate HMAC values`() {
-        let hmac = RFC_2104.HMAC(.sha1)
+        let hmac = IETF.RFC.`2104`.HMAC(.sha1)
         let expected = [
             "cc93cf18508d94934c64b65d8ba7667fb7cde4b0",
             "75a48a19d4cbe100644e8ac1397eea747a2d33ab",
@@ -42,13 +42,13 @@ struct `RFC 4226 Tests` {
             ("1637409809a679dc698207310c8c7fc07290d9e5", 645_520_489),
         ]
         for (value, truncated) in hmacs {
-            #expect(RFC_4226.HOTP.truncate(hex(value)) == UInt32(truncated))
+            #expect(IETF.RFC.`4226`.HOTP.truncate(hex(value)) == UInt32(truncated))
         }
     }
 
     @Test
     func `Appendix D HOTP values`() throws {
-        let hotp = try RFC_4226.HOTP(secret: Self.secret)
+        let hotp = try IETF.RFC.`4226`.HOTP(secret: Self.secret)
         let expected = [
             "755224", "287082", "359152", "969429", "338314",
             "254676", "287922", "162583", "399871", "520489",
@@ -61,13 +61,13 @@ struct `RFC 4226 Tests` {
     @Test
     func `section 5.4 example truncates at offset 10`() {
         let hmac = hex("1f8698690e02ca16618550ef7f19da8e945b555a")
-        #expect(RFC_4226.HOTP.truncate(hmac) == 0x50ef_7f19)
-        #expect(RFC_4226.HOTP.truncate(hmac) % 1_000_000 == 872_921)
+        #expect(IETF.RFC.`4226`.HOTP.truncate(hmac) == 0x50ef_7f19)
+        #expect(IETF.RFC.`4226`.HOTP.truncate(hmac) % 1_000_000 == 872_921)
     }
 
     @Test
     func `validate finds the counter inside the look-ahead window`() throws {
-        let hotp = try RFC_4226.HOTP(secret: Self.secret)
+        let hotp = try IETF.RFC.`4226`.HOTP(secret: Self.secret)
         #expect(hotp.validate("755224", counter: 0) == 0)
         #expect(hotp.validate("969429", counter: 0, lookAhead: 5) == 3)
         #expect(hotp.validate("969429", counter: 0, lookAhead: 2) == nil)
@@ -78,24 +78,24 @@ struct `RFC 4226 Tests` {
 
     @Test
     func `validate does not trap at the end of the counter range`() throws {
-        let hotp = try RFC_4226.HOTP(secret: Self.secret)
+        let hotp = try IETF.RFC.`4226`.HOTP(secret: Self.secret)
         let code = hotp.code(counter: .max)
         #expect(hotp.validate(code, counter: .max - 1, lookAhead: 10) == .max)
     }
 
     @Test
     func `leading zeros are kept`() throws {
-        let hotp = try RFC_4226.HOTP(secret: Self.secret, digits: 9)
+        let hotp = try IETF.RFC.`4226`.HOTP(secret: Self.secret, digits: 9)
         // Count 7 truncates to 82162583, eight digits.
         #expect(hotp.code(counter: 7) == "082162583")
     }
 
     @Test
     func `a generator refuses an empty secret, a code length outside 6 through 9, and a short hash`() {
-        #expect(throws: RFC_4226.Error.emptySecret) { try RFC_4226.HOTP(secret: []) }
-        #expect(throws: RFC_4226.Error.digits(5)) { try RFC_4226.HOTP(secret: Self.secret, digits: 5) }
-        #expect(throws: RFC_4226.Error.digits(10)) { try RFC_4226.HOTP(secret: Self.secret, digits: 10) }
-        let short = RFC_2104.Hash(blockLength: 64, outputLength: 16) { _ in [UInt8](repeating: 0, count: 16) }
-        #expect(throws: RFC_4226.Error.hashOutputLength(16)) { try RFC_4226.HOTP(secret: Self.secret, hash: short) }
+        #expect(throws: IETF.RFC.`4226`.Error.emptySecret) { try IETF.RFC.`4226`.HOTP(secret: []) }
+        #expect(throws: IETF.RFC.`4226`.Error.digits(5)) { try IETF.RFC.`4226`.HOTP(secret: Self.secret, digits: 5) }
+        #expect(throws: IETF.RFC.`4226`.Error.digits(10)) { try IETF.RFC.`4226`.HOTP(secret: Self.secret, digits: 10) }
+        let short = IETF.RFC.`2104`.Hash(blockLength: 64, outputLength: 16) { _ in [UInt8](repeating: 0, count: 16) }
+        #expect(throws: IETF.RFC.`4226`.Error.hashOutputLength(16)) { try IETF.RFC.`4226`.HOTP(secret: Self.secret, hash: short) }
     }
 }

@@ -1,4 +1,4 @@
-extension RFC_4226 {
+extension IETF.RFC.`4226` {
 
     /// A HOTP generator: a shared secret, a code length and the hash HMAC runs on (section 5).
     ///
@@ -12,24 +12,24 @@ extension RFC_4226 {
         public let digits: Int
 
         /// The HMAC the codes are computed with.
-        public let hmac: RFC_2104.HMAC
+        public let hmac: IETF.RFC.`2104`.HMAC
 
         public init(
             secret: [UInt8],
             digits: Int = 6,
-            hash: RFC_2104.Hash = .sha1
-        ) throws(RFC_4226.Error) {
+            hash: IETF.RFC.`2104`.Hash = .sha1
+        ) throws(IETF.RFC.`4226`.Error) {
             guard !secret.isEmpty else { throw .emptySecret }
             guard (6...9).contains(digits) else { throw .digits(digits) }
             guard hash.outputLength >= 20 else { throw .hashOutputLength(hash.outputLength) }
             self.secret = secret
             self.digits = digits
-            self.hmac = RFC_2104.HMAC(hash)
+            self.hmac = IETF.RFC.`2104`.HMAC(hash)
         }
     }
 }
 
-extension RFC_4226.HOTP {
+extension IETF.RFC.`4226`.HOTP {
 
     /// `DT` (section 5.3): four bytes of `hmac` at the offset its last byte's low nibble names, as a 31-bit number.
     ///
