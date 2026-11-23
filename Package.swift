@@ -19,14 +19,14 @@ let package = Package(
         .package(
             url: "https://github.com/swift-ietf/swift-rfc-2104.git",
             branch: "main"
-        )
+        ),
     ],
     targets: [
         .target(
             name: "RFC 4226",
             dependencies: [
                 .product(name: "IETF RFC", package: "swift-rfc"),
-                .product(name: "RFC 2104", package: "swift-rfc-2104")
+                .product(name: "RFC 2104", package: "swift-rfc-2104"),
             ]
         ),
         .testTarget(
